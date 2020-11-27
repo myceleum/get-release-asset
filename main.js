@@ -1,20 +1,10 @@
 const core = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
-const got = require("got");
-const { pipeline } = require("stream");
-const { createWriteStream, mkdir, mkdtempSync } = require("fs");
-const { promisify } = require("util");
-const { dirname, resolve, join } = require("path");
-const os = require("os");
-
-const asyncPipeline = promisify(pipeline);
-const asyncMkdir = promisify(mkdir);
 
 let owner = core.getInput("owner");
 let repo = core.getInput("repo");
 const excludes = core.getInput("exclude").trim().split(",");
 const assetName = core.getInput("assetName");
-const assetOutputPath = core.getInput("assetOutputPath");
 const repository = core.getInput("repository");
 const token = core.getInput("token");
 
@@ -24,36 +14,6 @@ const octokit = new Octokit({
 
 if (!owner || !repo) {
   [owner, repo] = repository.split("/");
-}
-
-const getAssetLocation = () => {
-  if (!assetName) return undefined;
-
-  if (assetOutputPath) {
-    return resolve(assetOutputPath);
-  }
-  const dir = mkdtempSync(join(os.tmpdir(), "out-"));
-  return join(dir, assetName);
-};
-
-async function downloadGithubAsset(assetId) {
-  const assetAbsoluteOutputPath = getAssetLocation();
-  const headers = {
-    Accept: "application/octet-stream",
-    Authorization: token,
-    "User-Agent": "",
-  };
-
-  await asyncMkdir(dirname(assetAbsoluteOutputPath), { recursive: true });
-
-  await asyncPipeline(
-    got.stream(`https://api.github.com/repos/${owner}/${repo}/releases/assets/${assetId}`, {
-      method: "GET",
-      headers,
-    }),
-    createWriteStream(assetAbsoluteOutputPath)
-  );
-  return assetAbsoluteOutputPath;
 }
 
 async function run() {
@@ -76,20 +36,11 @@ async function run() {
       releases = releases.filter((x) => x.draft !== true);
     }
 
-    console.log(releases[0]);
-
+    let asset;
     if (assetName) {
-      const asset = releases[0].assets.find((x) => x.name === assetName);
-      if (asset) {
-        try {
-          const path = await downloadGithubAsset(asset.id);
-          core.setOutput("asset_path", path);
-        } catch (e) {
-          core.setFailed("Failed to download the asset");
-          return;
-        }
-      } else {
-        core.setFailed("Asset was not found");
+      asset = releases[0].assets.find((x) => x.name === assetName);
+      if (!asset) {
+        core.setFailed(`Could not find asset ${assetName}`);
         return;
       }
     }
@@ -98,9 +49,9 @@ async function run() {
       core.setOutput("id", releases[0].id);
       core.setOutput("tag_name", releases[0].tag_name);
       core.setOutput("release_url", releases[0].url);
-      core.setOutput("assets_url", releases[0].assets_url);
       core.setOutput("prerelease", releases[0].prerelease);
       core.setOutput("draft", releases[0].draft);
+      core.setOutput("asset_download_url", releases[0].browser_download_url);
     } else {
       core.setFailed("No valid releases");
     }
