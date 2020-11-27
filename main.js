@@ -18,6 +18,9 @@ const assetOutputPath = core.getInput("assetOutputPath");
 const repository = core.getInput("repository");
 const token = core.getInput("token");
 
+core.debug(`exclude: ${core.getInput("exclude")}`);
+core.debug(`excludes: ${excludes}`);
+
 const octokit = new Octokit({
   auth: token,
 });
