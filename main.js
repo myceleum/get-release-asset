@@ -10,13 +10,13 @@ const os = require("os");
 const asyncPipeline = promisify(pipeline);
 const asyncMkdir = promisify(mkdir);
 
-let owner = core.getInput("owner") || "myceleum";
-let repo = core.getInput("repo") || "daemon";
+let owner = core.getInput("owner");
+let repo = core.getInput("repo");
 const excludes = core.getInput("exclude").trim().split(",");
 const assetName = core.getInput("assetName");
 const assetOutputPath = core.getInput("assetOutputPath");
 const repository = core.getInput("repository");
-const token = core.getInput("token") || process.env.AUTH_TOKEN;
+const token = core.getInput("token");
 
 const octokit = new Octokit({
   auth: token,
