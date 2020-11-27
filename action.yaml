@@ -17,7 +17,16 @@ inputs:
     description: "Comma seperate list of releases to exlude (can be release | prerelease | draft)"
     required: false
   assetName:
-    description: "Optional name of an asset you want to download from the release"
+    description: "Optional - name of an asset you want to download from the release"
+    required: false
+  outputPath:
+    description: "Optional - location on disk where the asset should be save (eg: ./tmp/out.zip | /tmp/out.zip) if not provided one is chosen for you"
+    required: false
+  unzip:
+    description: If your asset is a zip folder and you want to unzip it directly set this to true
+    default: false
+  unzipPath:
+    description: If unzip is enabled and you want to specify the directory to unzip to, you can use the path as absolute or relative.
     required: false
   token:
     description: "Token to use for request. Default is the github token provided by the action workflow, but you can use another token if you need to communicate with another repo"
@@ -34,8 +43,12 @@ outputs:
     description: "Boolean indicating if this was a prerelease"
   draft:
     description: "Boolean indicating if this was a draft"
-  asset_download_url:
-    description: "The download url of the desired asset"
+  asset_url:
+    description: "The url of the desired asset"
+  asset_path:
+    description: "The path on disk where the asset was downloaded (absolute path is used even with outputPath was set to relative)"
+  unzip_success:
+    description: "Boolean that will be set only when the unzip process was successfull"
 
 runs:
   using: "node12"

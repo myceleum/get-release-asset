@@ -14,7 +14,8 @@
     "@actions/github": "^2.1.1",
     "@octokit/rest": "^18.0.9",
     "got": "^11.8.0",
-    "octokit": "^1.0.0-hello-world"
+    "octokit": "^1.0.0-hello-world",
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.21.0",
