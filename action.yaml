@@ -1,24 +1,47 @@
-name: 'Get Latest Release'
-description: 'Get the latest release from another repository and output that for use in other actions'
+name: "Get Latest Release"
+description: "Get the latest release from another repository and output that for use in other actions"
 branding:
-  icon: 'anchor'
-  color: 'orange'
+  icon: "anchor"
+  color: "orange"
 inputs:
-  owner:
-    description: 'The Github user or organization that owns the repository'
-    required: false
-  repo:
-    description: 'The repository name'
-    required: false
   repository:
-    description: 'The repository name in full'
+    description: "Repository path (eg: myceleum/daemon). Default is current repo, and this can be overridem by using owner and repo inputs."
+    default: ${{ github.repository }}
+  owner:
+    description: "The Github user or organization that owns the repository"
+    require: false
+  repo:
+    description: "The repository name"
     required: false
   excludes:
-    description: 'Types of releases to exclude (e.g. pre-release)'
+    description: "Comma seperate list of releases to exlude (can be release | prerelease | draft)"
     required: false
+  assetName:
+    description: "Optional name of an asset you want to download from the release"
+    required: false
+  assetOutputPath:
+    description: "Location on disk (reletive or absolute) for the downloaded asset (eg: ./tmp/output.zip). If not specified output will be created for you."
+    required: false
+  token:
+    description: "Token to use for request. Default is the github token provided by the action workflow, but you can use another token if you need to communicate with another repo"
+    default: ${{ github.token }}
+
 outputs:
-  release:
-    description: 'Latest release'
+  id:
+    description: "id of the lastest release found with filter"
+  tag_name:
+    description: "The tag name for the release"
+  release_url:
+    description: "The base url for the release (api not html)"
+  assets_url:
+    description: "The base url for the release assets"
+  prerelease:
+    description: "Boolean indicating if this was a prerelease"
+  draft:
+    description: "Boolean indicating if this was a draft"
+  asset_path:
+    description: "Absolute path to where the asset was downloaded (if assetName was specified)"
+
 runs:
-  using: 'node12'
-  main: 'main.js'
+  using: "node12"
+  main: "main.js"

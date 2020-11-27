@@ -11,6 +11,14 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^2.1.1",
+    "@octokit/rest": "^18.0.9",
+    "got": "^11.8.0",
     "octokit": "^1.0.0-hello-world"
+  },
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1"
   }
 }
