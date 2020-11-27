@@ -10,10 +10,9 @@ const os = require("os");
 const asyncPipeline = promisify(pipeline);
 const asyncMkdir = promisify(mkdir);
 
-// const repository = core.getInput('repository');
 let owner = core.getInput("owner");
 let repo = core.getInput("repo");
-const excludes = core.getInput("excludes").trim().split(",");
+const excludes = core.getInput("exclude") ? core.getInput("exclude").trim().split(",") : [];
 const assetName = core.getInput("assetName");
 const assetOutputPath = core.getInput("assetOutputPath");
 const repository = core.getInput("repository");
@@ -66,7 +65,7 @@ async function run() {
     releases = releases.data;
 
     if (excludes.includes("release")) {
-      releases = releases.filter((x) => x.prerelease === true || x.draft === true);
+      releases = releases.filter((x) => !(x.prerelease === false && x.draft === false));
     }
 
     if (excludes.includes("prerelease")) {
@@ -95,7 +94,7 @@ async function run() {
 
     if (releases.length) {
       core.setOutput("id", releases[0].id);
-      core.setOutput("version", releases[0].id);
+      core.setOutput("tag_name", releases[0].tag_name);
       core.setOutput("release_url", releases[0].url);
       core.setOutput("assets_url", releases[0].assets_url);
       core.setOutput("prerelease", releases[0].prerelease);

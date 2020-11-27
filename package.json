@@ -4,7 +4,7 @@
   "description": "A simple action to get the latest release from a Github repo.",
   "main": "main.js",
   "scripts": {
-    "build": "ncc build main.js --license licenses.txt",
+    "build": "ncc build main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -17,7 +17,7 @@
     "octokit": "^1.0.0-hello-world"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.25.1",
+    "@zeit/ncc": "^0.21.0",
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^6.15.0",

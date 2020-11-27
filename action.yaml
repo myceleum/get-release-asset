@@ -13,7 +13,7 @@ inputs:
   repo:
     description: "The repository name"
     required: false
-  excludes:
+  exclude:
     description: "Comma seperate list of releases to exlude (can be release | prerelease | draft)"
     required: false
   assetName:
