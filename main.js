@@ -100,7 +100,7 @@ async function run() {
       core.setOutput("release_url", releases[0].url);
       core.setOutput("assets_url", releases[0].assets_url);
       core.setOutput("prerelease", releases[0].prerelease);
-      core.setOutput("draft", releases[0].prerelease);
+      core.setOutput("draft", releases[0].draft);
     } else {
       core.setFailed("No valid releases");
     }
