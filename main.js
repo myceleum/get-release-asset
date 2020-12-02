@@ -2,10 +2,10 @@ const core = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
 const got = require("got");
 const { pipeline } = require("stream");
-const { createWriteStream, createReadStream, mkdir, mkdtempSync } = require("fs");
+const { createWriteStream, mkdir, mkdtempSync } = require("fs");
 const { promisify } = require("util");
 const { dirname, resolve, join } = require("path");
-const unzipper = require("unzipper");
+const extract = require("extract-zip");
 const os = require("os");
 
 const asyncPipeline = promisify(pipeline);
@@ -62,7 +62,7 @@ const unzipAsset = async (assetPath) => {
   // Either use the unzipPath if specified or the dirctory of the asset
   const outPath = resolve(unzipPath || dirname(assetPath));
   await asyncMkdir(dirname(outPath), { recursive: true });
-  createReadStream(assetPath).pipe(unzipper.Extract({ path: outPath }));
+  await extract(resolve(assetPath), { dir: outPath });
 };
 
 async function run() {
